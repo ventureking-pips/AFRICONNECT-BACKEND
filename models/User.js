@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+const deviceSchema = new mongoose.Schema({
+  deviceId: { type: String, required: true },       // random uuid
+  name: { type: String, default: "" },              // “Chrome on Windows”, etc.
+  refreshTokenHash: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  lastUsedAt: { type: Date, default: Date.now },
+  revokedAt: { type: Date, default: null },
+});
+
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -11,6 +21,10 @@ const userSchema = new mongoose.Schema(
       enum: ["client", "pro", "admin"],
       default: "client",
     },
+    // for global invalidation if needed
+    refreshTokenHash: { type: String, default: null },
+    refreshTokenHash: { type: String, default: null },
+    devices: [deviceSchema],
   },
   { timestamps: true }
 );

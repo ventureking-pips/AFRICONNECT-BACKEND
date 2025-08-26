@@ -5,6 +5,10 @@ import authRoutes from "./routes/authRoutes.js";
 import professionalRoutes from "./routes/professionalRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import cookieParser from "cookie-parser"
+import cors from "cors"
+import auditRoutes from "./routes/auditRoutes.js";
+
 
 dotenv.config();
 
@@ -12,6 +16,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser())
 
 // Database
 connectDB();
@@ -21,6 +26,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/professionals", professionalRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/audit", auditRoutes);
+// CORS with credentials for refresh cookie
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 // Root route
 app.get("/", (req, res) => {
